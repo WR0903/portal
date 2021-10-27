@@ -1,0 +1,24 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Login dockerhub
+      run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag wr0903/portal:latest
+    - name: Push the Docker image
+      run: docker push wr0903/portal:latest
+    - name: Logout dockerhub
+      run: docker logout
